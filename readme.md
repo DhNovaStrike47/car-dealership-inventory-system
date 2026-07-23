@@ -1,6 +1,5 @@
 # Car Dealership Inventory System
 
-A full-stack car dealership inventory management application built as part of the Incubyte (Ahmedabad) campus placement assessment, following Test-Driven Development (TDD) practices.
 
 ## Overview
 
