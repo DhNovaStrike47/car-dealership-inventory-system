@@ -92,3 +92,30 @@ adminOnly middleware checking req.user.role."
   adding --forceExit to the test script instead.
 - Fixed a test bug where a delete request was missing its Authorization 
   header, causing an unrelated 401 instead of the expected 200.
+
+  ## Phase 5 — Inventory: Purchase & Restock
+Prompt (Red): "Write failing tests for POST /api/vehicles/:id/purchase: 
+success decreases quantity by 1, and returns 400 if quantity is already 0."
+
+Prompt (Green): "Implement the purchase endpoint: decrement quantity if 
+greater than 0, else return 400."
+
+Prompt (Red): "Write failing tests for POST /api/vehicles/:id/restock 
+(admin only): 403 for non-admin, 200 with increased quantity for admin."
+
+Prompt (Green): "Implement the restock endpoint, protected by adminOnly, 
+incrementing quantity by a given amount from the request body."
+
+## Phase 6 — Frontend (React + Tailwind)
+Prompt: "Scaffold a React + Tailwind frontend using Vite, with axios for API 
+calls and an AuthContext storing JWT and role in memory (not localStorage)."
+
+Prompt: "Create login and registration forms that call the backend auth 
+endpoints and redirect to the dashboard on success."
+
+Prompt: "Create a dashboard that fetches and displays vehicles, supports 
+search by make, and includes a Purchase button that's disabled when 
+quantity is 0."
+
+Prompt: "Add an admin-only panel for adding, updating, deleting vehicles 
+and restocking inventory, shown only when the logged-in user's role is admin."
