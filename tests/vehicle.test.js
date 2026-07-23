@@ -115,15 +115,15 @@ describe('DELETE /api/vehicles/:id', () => {
   });
 
   it('should delete a vehicle and return 200 for an admin user', async () => {
-    const createRes = await request(app)
-      .post('/api/vehicles')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ make: 'Kia', model: 'Soul', category: 'Hatchback', price: 17000, quantity: 1 });
+  const createRes = await request(app)
+    .post('/api/vehicles')
+    .set('Authorization', `Bearer ${validToken}`)
+    .send({ make: 'Kia', model: 'Soul', category: 'Hatchback', price: 17000, quantity: 1 });
 
-    const res = await request(app)
-      .delete(`/api/vehicles/${createRes.body._id}`)
-      
+  const res = await request(app)
+    .delete(`/api/vehicles/${createRes.body._id}`)
+    .set('Authorization', `Bearer ${adminToken}`);
 
-    expect(res.statusCode).toBe(200);
-  });
+  expect(res.statusCode).toBe(200);
+});
 });
