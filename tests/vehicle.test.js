@@ -9,6 +9,12 @@ const validToken = jwt.sign(
   { expiresIn: '1h' }
 );
 
+const adminToken = jwt.sign(
+  { userId: 'fakeadminid', role: 'admin' },
+  process.env.JWT_SECRET,
+  { expiresIn: '1h' }
+);
+
 describe('Auth middleware on GET /api/vehicles', () => {
   it('should return 401 if no token is provided', async () => {
     const res = await request(app).get('/api/vehicles');
@@ -116,7 +122,7 @@ describe('DELETE /api/vehicles/:id', () => {
 
     const res = await request(app)
       .delete(`/api/vehicles/${createRes.body._id}`)
-      .set('Authorization', `Bearer ${adminToken}`);
+      
 
     expect(res.statusCode).toBe(200);
   });

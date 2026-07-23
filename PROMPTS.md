@@ -54,3 +54,9 @@ After removing mongodb-memory-server, discovered that repeated test runs
 against the real database caused duplicate-key (500) errors on registration, 
 since test users persisted across runs. Fixed by deleting only the known 
 test usernames in an afterEach hook, avoiding a full database wipe.
+
+## Phase 4 — Vehicle CRUD
+Prompt (Red/Green per endpoint): "Write failing Jest+Supertest tests for 
+[create/list/search/update/delete] vehicle endpoints, then implement each 
+using Mongoose against a Vehicle model with make, model, category, price, 
+quantity fields. Delete is restricted to admin role via adminOnly middleware."
