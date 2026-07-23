@@ -68,3 +68,29 @@ describe('GET /api/vehicles', () => {
     expect(Array.isArray(res.body)).toBe(true);
   });
 });
+describe('GET /api/vehicles/search', () => {
+  beforeAll(async () => {
+    await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Ford', model: 'Mustang', category: 'Coupe', price: 35000, quantity: 3 });
+  });
+
+  it('should return vehicles matching make', async () => {
+    const res = await request(app)
+      .get('/api/vehicles/search?make=Ford')
+      .set('Authorization', `Bearer ${validToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.some(v => v.make === 'Ford')).toBe(true);
+  });
+
+  it('should return vehicles within a price range', async () => {
+    const res = await request(app)
+      .get('/api/vehicles/search?minPrice=30000&maxPrice=40000')
+      .set('Authorization', `Bearer ${validToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.every(v => v.price >= 30000 && v.price <= 40000)).toBe(true);
+  });
+});
