@@ -20,3 +20,12 @@ save user, sign a JWT, return 201 with token. Make the failing tests pass."
 
 Prompt (Refactor): "Extract password hashing into utils/hashPassword.js and 
 JWT signing into utils/generateToken.js. Keep tests green."
+
+## Phase 2 — Auth: Login
+Prompt (Red): "Write failing Jest + Supertest tests for POST /api/auth/login: 
+successful login returns 200 with a token, wrong password returns 401, 
+nonexistent username returns 401."
+
+Prompt (Green): "Implement POST /api/auth/login: find user by username, 
+compare password with bcrypt, return a JWT on success, 401 on failure. 
+Make the failing tests pass."

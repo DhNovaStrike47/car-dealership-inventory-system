@@ -1,9 +1,27 @@
 const request = require('supertest');
-const app = require('../app');       // or wherever app.js lives relative to tests/
+const app = require('../app');
 
-  describe('POST /api/auth/login', () => {
+describe('POST /api/auth/register', () => {
+  it('should register a new user and return 201 with a token', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ username: 'testuser', password: 'password123' });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty('token');
+  });
+
+  it('should return 400 if username or password is missing', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ username: 'onlyusername' });
+
+    expect(res.statusCode).toBe(400);
+  });
+});
+
+describe('POST /api/auth/login', () => {
   beforeEach(async () => {
-    // Ensure a known user exists before each login test
     await request(app)
       .post('/api/auth/register')
       .send({ username: 'loginuser', password: 'correctpassword' });
@@ -33,6 +51,4 @@ const app = require('../app');       // or wherever app.js lives relative to tes
 
     expect(res.statusCode).toBe(401);
   });
-});;
-
-  
+});
