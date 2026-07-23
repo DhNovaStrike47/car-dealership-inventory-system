@@ -4,7 +4,8 @@ const { authenticate } = require('../middleware/auth');
 const {
   createVehicle,
   getAllVehicles,
-  searchVehicles,updateVehicle
+  searchVehicles,
+  updateVehicle
 } = require('../controllers/vehicleController');
 
 router.post('/', authenticate, createVehicle);

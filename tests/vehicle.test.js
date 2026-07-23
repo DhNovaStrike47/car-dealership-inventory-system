@@ -94,3 +94,30 @@ describe('GET /api/vehicles/search', () => {
     expect(res.body.every(v => v.price >= 30000 && v.price <= 40000)).toBe(true);
   });
 });
+describe('DELETE /api/vehicles/:id', () => {
+  it('should return 403 for a non-admin user', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Mazda', model: '3', category: 'Hatchback', price: 18000, quantity: 2 });
+
+    const res = await request(app)
+      .delete(`/api/vehicles/${createRes.body._id}`)
+      .set('Authorization', `Bearer ${validToken}`);
+
+    expect(res.statusCode).toBe(403);
+  });
+
+  it('should delete a vehicle and return 200 for an admin user', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Kia', model: 'Soul', category: 'Hatchback', price: 17000, quantity: 1 });
+
+    const res = await request(app)
+      .delete(`/api/vehicles/${createRes.body._id}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+  });
+});
