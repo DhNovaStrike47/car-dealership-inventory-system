@@ -8,13 +8,15 @@ const {
   searchVehicles,
   updateVehicle,
   deleteVehicle,
-  purchaseVehicle
+  purchaseVehicle,
+  restockVehicle
 } = require('../controllers/vehicleController');
 
 router.post('/', authenticate, createVehicle);
 router.get('/search', authenticate, searchVehicles);
 router.get('/', authenticate, getAllVehicles);
 router.post('/:id/purchase', authenticate, purchaseVehicle);
+router.post('/:id/restock', authenticate, adminOnly, restockVehicle);
 router.put('/:id', authenticate, updateVehicle);
 router.delete('/:id', authenticate, adminOnly, deleteVehicle);
 
