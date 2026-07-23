@@ -127,3 +127,31 @@ describe('DELETE /api/vehicles/:id', () => {
   expect(res.statusCode).toBe(200);
 });
 });
+describe('POST /api/vehicles/:id/purchase', () => {
+  it('should decrease quantity by 1 and return 200', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Nissan', model: 'Altima', category: 'Sedan', price: 24000, quantity: 3 });
+
+    const res = await request(app)
+      .post(`/api/vehicles/${createRes.body._id}/purchase`)
+      .set('Authorization', `Bearer ${validToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.quantity).toBe(2);
+  });
+
+  it('should return 400 if quantity is already 0', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Subaru', model: 'Impreza', category: 'Sedan', price: 23000, quantity: 0 });
+
+    const res = await request(app)
+      .post(`/api/vehicles/${createRes.body._id}/purchase`)
+      .set('Authorization', `Bearer ${validToken}`);
+
+    expect(res.statusCode).toBe(400);
+  });
+});

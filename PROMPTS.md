@@ -56,7 +56,39 @@ since test users persisted across runs. Fixed by deleting only the known
 test usernames in an afterEach hook, avoiding a full database wipe.
 
 ## Phase 4 — Vehicle CRUD
-Prompt (Red/Green per endpoint): "Write failing Jest+Supertest tests for 
-[create/list/search/update/delete] vehicle endpoints, then implement each 
-using Mongoose against a Vehicle model with make, model, category, price, 
-quantity fields. Delete is restricted to admin role via adminOnly middleware."
+Prompt (Red): "Write failing Jest + Supertest tests for POST /api/vehicles 
+(create) and GET /api/vehicles (list), covering success and validation 
+failure cases."
+
+Prompt (Green): "Create a Mongoose Vehicle model with make, model, category, 
+price, and quantity fields. Implement POST /api/vehicles and GET 
+/api/vehicles using a vehicleController, protected by the auth middleware. 
+Make the failing tests pass."
+
+Prompt (Red): "Write failing tests for GET /api/vehicles/search filtering 
+by make and by price range."
+
+Prompt (Green): "Implement GET /api/vehicles/search using Mongoose query 
+filters for make, model, category, and price range via query params."
+
+Prompt (Red): "Write a failing test for PUT /api/vehicles/:id updating a 
+vehicle's price."
+
+Prompt (Green): "Implement PUT /api/vehicles/:id using 
+findByIdAndUpdate with validation."
+
+Prompt (Red): "Write failing tests for DELETE /api/vehicles/:id: 403 for 
+non-admin, 200 for admin."
+
+Prompt (Green): "Implement DELETE /api/vehicles/:id protected by an 
+adminOnly middleware checking req.user.role."
+
+## Debugging notes — Phase 4
+- Fixed a missing import (updateVehicle) causing "Route.put() requires a 
+  callback function" error.
+- Diagnosed intermittent MongoDB connection timeouts between test files, 
+  traced to setup.js closing and reopening the connection between test 
+  files on Windows; fixed by removing the per-file afterAll close and 
+  adding --forceExit to the test script instead.
+- Fixed a test bug where a delete request was missing its Authorization 
+  header, causing an unrelated 401 instead of the expected 200.
