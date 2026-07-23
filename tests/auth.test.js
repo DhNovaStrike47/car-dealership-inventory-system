@@ -5,12 +5,12 @@ require('dotenv').config();
 
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI);
-});
+}, 20000); // 20 second timeout for this hook
 
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-});
+}, 20000); // 20 second timeout for this hook
 
 describe('POST /api/auth/register', () => {
   it('should register a new user and return 201 with a token', async () => {

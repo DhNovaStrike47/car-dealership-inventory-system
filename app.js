@@ -3,6 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-// Routes will be mounted here as we build them (Phase 1 onward)
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 module.exports = app;
