@@ -3,6 +3,12 @@ const app = require('../app');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+const validToken = jwt.sign(
+  { userId: 'fakeuserid', role: 'user' },
+  process.env.JWT_SECRET,
+  { expiresIn: '1h' }
+);
+
 describe('Auth middleware on GET /api/vehicles', () => {
   it('should return 401 if no token is provided', async () => {
     const res = await request(app).get('/api/vehicles');
@@ -17,16 +23,48 @@ describe('Auth middleware on GET /api/vehicles', () => {
   });
 
   it('should return 200 if a valid token is provided', async () => {
-    const validToken = jwt.sign(
-      { userId: 'fakeuserid', role: 'user' },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const res = await request(app)
+      .get('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`);
+    expect(res.statusCode).toBe(200);
+  });
+});
 
+describe('POST /api/vehicles', () => {
+  it('should create a new vehicle and return 201', async () => {
+    const res = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({
+        make: 'Toyota',
+        model: 'Corolla',
+        category: 'Sedan',
+        price: 20000,
+        quantity: 5
+      });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty('_id');
+    expect(res.body.make).toBe('Toyota');
+  });
+
+  it('should return 400 if required fields are missing', async () => {
+    const res = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Honda' });
+
+    expect(res.statusCode).toBe(400);
+  });
+});
+
+describe('GET /api/vehicles', () => {
+  it('should return an array of vehicles', async () => {
     const res = await request(app)
       .get('/api/vehicles')
       .set('Authorization', `Bearer ${validToken}`);
 
     expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
   });
 });
