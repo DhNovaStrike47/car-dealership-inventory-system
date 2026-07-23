@@ -42,8 +42,3 @@ route protected by this middleware."
 Prompt (Refactor): "Add an adminOnly middleware that checks req.user.role 
 for later use on admin-restricted routes."
 
-git add .
-git commit -m "refactor: revert to direct MongoDB connection for tests, remove mongodb-memory-server
-
-Co-authored-by: Claude <noreply@anthropic.com>"
-git push
