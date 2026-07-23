@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const { createVehicle, getAllVehicles } = require('../controllers/vehicleController');
 
-router.get('/', authenticate, (req, res) => {
-  res.status(200).json([]); // placeholder — real vehicle list comes in Phase 4
-});
+router.post('/', authenticate, createVehicle);
+router.get('/', authenticate, getAllVehicles);
 
 module.exports = router;
