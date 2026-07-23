@@ -42,3 +42,15 @@ route protected by this middleware."
 Prompt (Refactor): "Add an adminOnly middleware that checks req.user.role 
 for later use on admin-restricted routes."
 
+## Note — reverted test DB approach
+Initially tried mongodb-memory-server for isolated test databases, but the 
+600MB one-time binary download caused repeated timeouts on a slow connection. 
+Reverted to connecting tests directly to the real MongoDB instance for 
+simplicity, removing dropDatabase() calls to avoid data collisions between 
+parallel test files, and running tests with --runInBand.
+
+## Note — test data cleanup
+After removing mongodb-memory-server, discovered that repeated test runs 
+against the real database caused duplicate-key (500) errors on registration, 
+since test users persisted across runs. Fixed by deleting only the known 
+test usernames in an afterEach hook, avoiding a full database wipe.
