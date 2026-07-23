@@ -29,3 +29,15 @@ nonexistent username returns 401."
 Prompt (Green): "Implement POST /api/auth/login: find user by username, 
 compare password with bcrypt, return a JWT on success, 401 on failure. 
 Make the failing tests pass."
+
+## Phase 3 — JWT Auth Middleware
+Prompt (Red): "Write failing tests asserting GET /api/vehicles returns 401 
+with no token, 401 with an invalid token, and 200 with a valid token."
+
+Prompt (Green): "Create an Express middleware that verifies a JWT from the 
+Authorization header, attaches decoded user info to req.user, and calls 
+next(), returning 401 if missing/invalid. Create a minimal /api/vehicles 
+route protected by this middleware."
+
+Prompt (Refactor): "Add an adminOnly middleware that checks req.user.role 
+for later use on admin-restricted routes."
