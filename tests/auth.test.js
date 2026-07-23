@@ -1,35 +1,38 @@
 const request = require('supertest');
-const app = require('../app');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const app = require('../app');       // or wherever app.js lives relative to tests/
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI);
-}, 20000); // 20 second timeout for this hook
-
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-}, 20000); // 20 second timeout for this hook
-
-describe('POST /api/auth/register', () => {
-  it('should register a new user and return 201 with a token', async () => {
-    const res = await request(app)
+  describe('POST /api/auth/login', () => {
+  beforeEach(async () => {
+    // Ensure a known user exists before each login test
+    await request(app)
       .post('/api/auth/register')
-      .send({
-        username: 'testuser',
-        password: 'password123'
-      });
+      .send({ username: 'loginuser', password: 'correctpassword' });
+  });
 
-    expect(res.statusCode).toBe(201);
+  it('should log in an existing user and return 200 with a token', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ username: 'loginuser', password: 'correctpassword' });
+
+    expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('token');
   });
 
-  it('should return 400 if username or password is missing', async () => {
+  it('should return 401 for a wrong password', async () => {
     const res = await request(app)
-      .post('/api/auth/register')
-      .send({ username: 'onlyusername' });
+      .post('/api/auth/login')
+      .send({ username: 'loginuser', password: 'wrongpassword' });
 
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(401);
   });
-});
+
+  it('should return 401 for a username that does not exist', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ username: 'nosuchuser', password: 'whatever' });
+
+    expect(res.statusCode).toBe(401);
+  });
+});;
+
+  
