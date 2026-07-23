@@ -155,3 +155,33 @@ describe('POST /api/vehicles/:id/purchase', () => {
     expect(res.statusCode).toBe(400);
   });
 });
+describe('POST /api/vehicles/:id/restock', () => {
+  it('should return 403 for a non-admin user', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Chevrolet', model: 'Malibu', category: 'Sedan', price: 25000, quantity: 2 });
+
+    const res = await request(app)
+      .post(`/api/vehicles/${createRes.body._id}/restock`)
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ amount: 5 });
+
+    expect(res.statusCode).toBe(403);
+  });
+
+  it('should increase quantity for an admin user and return 200', async () => {
+    const createRes = await request(app)
+      .post('/api/vehicles')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ make: 'Hyundai', model: 'Elantra', category: 'Sedan', price: 21000, quantity: 2 });
+
+    const res = await request(app)
+      .post(`/api/vehicles/${createRes.body._id}/restock`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ amount: 5 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.quantity).toBe(7);
+  });
+});
