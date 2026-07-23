@@ -4,11 +4,12 @@ const { authenticate } = require('../middleware/auth');
 const {
   createVehicle,
   getAllVehicles,
-  searchVehicles
+  searchVehicles,updateVehicle
 } = require('../controllers/vehicleController');
 
 router.post('/', authenticate, createVehicle);
 router.get('/search', authenticate, searchVehicles);
 router.get('/', authenticate, getAllVehicles);
+router.put('/:id', authenticate, updateVehicle);
 
 module.exports = router;
